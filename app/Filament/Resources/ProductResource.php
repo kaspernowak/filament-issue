@@ -67,6 +67,7 @@ class ProductResource extends Resource
             ->headerActions([
                 ExportAction::make()
                     ->exporter(ProductExporter::class)
+                    // ->chunkSize(100000) this is a temporary fix for the chunk size error
                     ->modifyQueryUsing(fn($query) => $query->reorder()->orderBy('price', 'asc'))
                     ->columnMapping(false)
             ])

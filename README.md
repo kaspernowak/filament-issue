@@ -12,8 +12,23 @@ When exporting records with a specific sort order and using chunking, the final 
 
 ## Setup Instructions
 
-1. Clone the repository
-2. Copy `.env.example` to `.env` and configure your PostgreSQL database:
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:kaspernowak/filament-issue.git
+   cd filament-issue
+   ```
+
+2. Install dependencies:
+   ```bash
+   composer install
+   ```
+
+3. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Configure your PostgreSQL database in `.env`. Adjust these values according to your setup:
    ```env
    DB_CONNECTION=pgsql
    DB_HOST=127.0.0.1
@@ -22,25 +37,29 @@ When exporting records with a specific sort order and using chunking, the final 
    DB_USERNAME=filament_user
    DB_PASSWORD=filament_password
    ```
-3. Install dependencies:
+
+5. Generate application key:
    ```bash
-   composer install
+   php artisan key:generate
    ```
-4. Run migrations and seeders:
+
+6. Run migrations and seeders:
    ```bash
    php artisan migrate:fresh --seed
    ```
-5. Start the development server:
+
+7. Start the development server:
    ```bash
    php artisan serve
    ```
-6. Login with test credentials:
+
+8. Visit `http://localhost:8000/admin` and login with test credentials:
    - Email: test@example.com
    - Password: password
 
 ## Steps to Reproduce
 
-1. Navigate to the Products listing page
+1. Navigate to the Products listing page (`/admin/products`)
 2. Note the default sorting (price descending)
 3. Click the Export button in the header actions
 4. When the export completes, download and open the CSV
@@ -66,6 +85,21 @@ The exported CSV's sort order may not match the web interface, particularly when
 
 Currently, the issue can be worked around by either:
 1. Setting a very large chunk size (e.g., `->chunkSize(100000)`)
-2. Removing the chunk size configuration entirely
+2. Removing the chunk size configuration entirely (as demonstrated in this repository)
 
 However, this may not be suitable for production environments with large datasets.
+
+## Database Schema
+
+The reproduction uses a simple products table with the following structure:
+- `id` (primary key)
+- `name` (string)
+- `price` (decimal)
+- `stock` (integer)
+- timestamps
+
+## Additional Notes
+
+- The queue connection is set to 'sync' in `.env.example` for immediate processing of exports
+- The repository includes a seeder that creates 200 test products with random prices
+- The export is configured to sort by price in ascending order
