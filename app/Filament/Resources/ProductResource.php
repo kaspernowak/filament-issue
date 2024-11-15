@@ -39,7 +39,8 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('price', 'desc')
+            ->defaultSort('price', 'asc')
+            ->paginated(false)
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
